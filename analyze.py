@@ -1,10 +1,18 @@
 from azure.cognitiveservices.vision.computervision import ComputerVisionClient
+from azure.identity import DefaultAzureCredential
+from azure.keyvault.secrets import SecretClient
 from msrest.authentication import CognitiveServicesCredentials
 from azure.cognitiveservices.vision.computervision.models import OperationStatusCodes
 import time
 
-endpoint = "ENTER ENDPOINT HERE"
-key = "ENTER KEY HERE"
+key_vault_uri = f"https://lab1-credentials.vault.azure.net/"
+
+credential = DefaultAzureCredential()
+client = SecretClient(vault_url=key_vault_uri, credential=credential)
+
+#getting secrets from azure key vault
+endpoint = client.get_secret("nikitaag-lab1-endpoint").value
+key = client.get_secret("nikitaag-lab1-key").value
 
 credentials = CognitiveServicesCredentials(key)
 
